@@ -6,12 +6,44 @@
         xmlns:local="clr-namespace:WebcamSettings"
         mc:Ignorable="d"
         Title="Webcam Settings" Height="350" Width="525">
+    <Window.Resources>
+        <DataTemplate x:Key="GenericProp">
+            <Grid Margin="0,1" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="50" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding Name}" />
+                <Slider Grid.Column="1" Minimum="{Binding Min}" Maximum="{Binding Max}" Value="{Binding Value}" Name="slValue" ValueChanged="Slider_ValueChanged" />
+                <TextBox Grid.Column="2" Text="{Binding Value}"/>
+                <CheckBox Grid.Column="3" IsChecked="{Binding Auto}"  Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked">Auto</CheckBox>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="EnumProp">
+            <Grid Margin="0,1" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding Name}" />
+                <StackPanel Grid.Column ="1" Orientation="Horizontal">
+                    <CheckBox IsChecked="true"  Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked">Auto</CheckBox>
+                    <CheckBox IsChecked="true"  Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked">Auto</CheckBox>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+        <local:PropTypeSelector x:Key="propSelector" GenericProp="{StaticResource GenericProp}" EnumProp="{StaticResource EnumProp}"/>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100" />
+            <RowDefinition Height="*" MinHeight="50" MaxHeight="{Binding ElementName=lbWebcams, Path=DesiredSize.Height}"/>
+            <RowDefinition Height="5"/>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <ListBox Name="lbWebcams" HorizontalContentAlignment="Stretch" VerticalAlignment="Top" SelectionChanged="lbWebcams_SelectionChanged">
+        <ListBox Name="lbWebcams" HorizontalContentAlignment="Stretch" VerticalAlignment="Top" VerticalContentAlignment="Stretch" SelectionChanged="lbWebcams_SelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,1" HorizontalAlignment="Stretch">
@@ -23,23 +55,8 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <ListView Grid.Row="1" Name="lbControls" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid Margin="0,1" HorizontalAlignment="Stretch">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="200" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="100" />
-                            <ColumnDefinition Width="50" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{Binding Name}" />
-                        <Slider Grid.Column="1" Minimum="{Binding Min}" Maximum="{Binding Max}" Value="{Binding Value}" Name="slValue" ValueChanged="Slider_ValueChanged" />
-                        <TextBox Grid.Column="2" Text="{Binding Value}"/>
-                        <CheckBox Grid.Column="3" IsChecked="{Binding Auto}"  Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked">Auto</CheckBox>
-                    </Grid>
-                </DataTemplate>
-            </ListView.ItemTemplate>
+        <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" />
+        <ListView Grid.Row="2" Name="lbControls" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" ItemTemplateSelector="{StaticResource propSelector}">
         </ListView>
     </Grid>
 </Window>
